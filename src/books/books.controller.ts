@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   UseGuards,
   ValidationPipe,
@@ -14,13 +15,18 @@ import { ApiKeyGuard } from 'src/api-key/api-key.guard';
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}
   @Get()
-  findAll() {
-    return this.booksService.findAll();
+  async findAll() {
+    return await this.booksService.findAll();
+  }
+
+  @Get(':id')
+  async findById(@Param('id') id: string) {
+    return await this.booksService.findById(id);
   }
 
   @UseGuards(ApiKeyGuard)
   @Post()
-  create(@Body(new ValidationPipe()) createBookDto: CreateBookDto) {
-    return this.booksService.create(createBookDto);
+  async create(@Body(new ValidationPipe()) createBookDto: CreateBookDto) {
+    return await this.booksService.create(createBookDto);
   }
 }

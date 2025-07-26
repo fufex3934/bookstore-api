@@ -1,23 +1,25 @@
 import { Injectable } from '@nestjs/common';
-import { Books } from './interfaces/books.interface';
 import { CreateBookDto } from './dto/create-book.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Book, BookDocument } from './schemas/book.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class BooksService {
-  private readonly books: Books[] = [
-    {
-      title: '1984',
-      description: 'A dystopian novel by George Orwell',
-      author: 'George Orwell',
-    },
-  ];
+  constructor(
+    @InjectModel(Book.name)
+    private bookModel: Model<BookDocument>,
+  ) {}
 
-  create(book: CreateBookDto) {
-    this.books.push(book);
-    return book;
+  async create(book: CreateBookDto): Promise<Book> {
+    const createdBook = new this.bookModel(book);
+    return createdBook.save();
   }
 
-  findAll(): Books[] {
-    return this.books;
+  async findAll(): Promise<Book[]> {
+    return this.bookModel.find().exec();
+  }
+  async findById(id: string): Promise<Book | null> {
+    return this.bookModel.findById(id).exec();
   }
 }
