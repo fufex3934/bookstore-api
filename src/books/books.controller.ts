@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
-import { ApiKeyGuard } from 'src/api-key/api-key.guard';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('books')
 export class BooksController {
@@ -24,8 +24,9 @@ export class BooksController {
     return await this.booksService.findById(id);
   }
 
-  @UseGuards(ApiKeyGuard)
+  // @UseGuards(ApiKeyGuard)
   @Post()
+  @UseGuards(JwtAuthGuard)
   async create(@Body(new ValidationPipe()) createBookDto: CreateBookDto) {
     return await this.booksService.create(createBookDto);
   }
