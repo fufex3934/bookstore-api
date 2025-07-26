@@ -22,4 +22,7 @@ export class BooksService {
   async findById(id: string): Promise<Book | null> {
     return this.bookModel.findById(id).exec();
   }
+  async delete(id: string): Promise<Book | null> {
+    return this.bookModel.findByIdAndDelete(id).exec();
+  }
 }

@@ -21,13 +21,18 @@ export class AuthService {
       return {
         _id: user._id.toString(),
         email: user.email,
+        role: user.role,
       };
     }
     return null;
   }
 
   async login(user: JwtUser): Promise<{ access_token: string }> {
-    const payload: JwtPayload = { sub: user._id, email: user.email };
+    const payload: JwtPayload = {
+      sub: user._id,
+      email: user.email,
+      role: user.role,
+    };
     return {
       access_token: await this.jwtService.signAsync(payload, {
         secret: this.configService.get<string>('JWT_SECRET') as string,
