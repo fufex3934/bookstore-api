@@ -1,19 +1,22 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { BooksService } from './books.service';
+import { Books } from './interfaces/books.interface';
 
 @Controller('books')
 export class BooksController {
+  constructor(private readonly booksService: BooksService) {}
   @Get()
   findAll() {
-    return 'This action returns all books';
+    return this.booksService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return ` This action returns book with Id:${id}`;
+    return this.booksService.findOne(id);
   }
 
   @Post()
-  create(@Body() createBookDto: any) {
-    return ` This action adds a new book with title: ${createBookDto}`;
+  create(@Body() createBookDto: Books) {
+    return this.booksService.create(createBookDto);
   }
 }
